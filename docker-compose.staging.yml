@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  weather-api-staging:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: emerald-hills-weather-staging
+    ports:
+      - "3002:3001"  # Different port for staging
+    environment:
+      - NODE_ENV=staging
+      - PORT=3001
+      - LOG_LEVEL=debug
+    env_file:
+      - .env.staging
+    volumes:
+      - weather-staging-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    labels:
+      - "environment=staging"
+      - "project=emerald-hills-weather"
+
+volumes:
+  weather-staging-data:
+    driver: local

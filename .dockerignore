@@ -1,0 +1,59 @@
+# Emerald Hills Weather Dashboard - Docker ignore file
+
+# Development files
+node_modules
+npm-debug.log*
+.npm
+.nyc_output
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Version control
+.git
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Test files
+tests/
+test-*.js
+full-api-test.js
+
+# Development tools
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Agent dashboard and PM files
+agent-dashboard.html
+dashboard-server.js
+pm.py
+agent_status.json
+agent_instructions/
+AGENT_*.md
+PM*.md

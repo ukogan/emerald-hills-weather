@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emerald Hills Weather - Agent Management Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        
+        .status-overview {
+            grid-column: 1 / -1;
+        }
+        
+        .epic-progress {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .epic {
+            flex: 1;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .epic h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #10b981;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .agent-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .agent {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #6b7280;
+        }
+        
+        .agent.available {
+            border-left-color: #10b981;
+        }
+        
+        .agent.active {
+            border-left-color: #f59e0b;
+        }
+        
+        .agent h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        
+        .agent-ticket {
+            font-size: 12px;
+            color: #6b7280;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        .tickets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .ticket {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #6b7280;
+        }
+        
+        .ticket.todo {
+            border-left-color: #6b7280;
+        }
+        
+        .ticket.in_progress {
+            border-left-color: #f59e0b;
+        }
+        
+        .ticket.completed {
+            border-left-color: #10b981;
+        }
+        
+        .ticket h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        
+        .ticket-meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            grid-column: 1 / -1;
+        }
+        
+        .control-section {
+            margin-bottom: 20px;
+        }
+        
+        .control-section h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .output {
+            background: #1f2937;
+            color: #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        
+        .agent-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .agent-control {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .agent-control h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+        
+        .completed-work {
+            grid-column: 1 / -1;
+        }
+        
+        .completed-item {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .completed-item h4 {
+            color: #166534;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .completed-item p {
+            color: #15803d;
+            font-size: 12px;
+        }
+        
+        .refresh-info {
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .epic-progress {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌤️ Emerald Hills Weather - Agent Management</h1>
+            <p>Parallel Development Coordination Dashboard</p>
+            <div style="margin-top: 15px;">
+                <a href="http://localhost:3001" target="_blank" class="btn btn-success" style="text-decoration: none; display: inline-block;">
+                    🌡️ Open Weather Application
+                </a>
+                <a href="http://localhost:3001/api/weather/test" target="_blank" class="btn btn-secondary" style="text-decoration: none; display: inline-block; margin-left: 10px;">
+                    🧪 Test Weather APIs
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Project Status Overview -->
+            <div class="card status-overview">
+                <h2>📊 Project Status</h2>
+                <div class="epic-progress">
+                    <div class="epic">
+                        <h3>E1: Data Foundation & Validation</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="e1-progress"></div>
+                        </div>
+                        <p id="e1-status">Loading...</p>
+                    </div>
+                    <div class="epic">
+                        <h3>E2: Core Weather Dashboard</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="e2-progress"></div>
+                        </div>
+                        <p id="e2-status">Loading...</p>
+                    </div>
+                </div>
+                <div id="project-phase"></div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border-radius: 8px;">
+                    <h3 style="margin-bottom: 10px; font-size: 16px;">🚀 Application Status</h3>
+                    <div id="app-status">
+                        <span style="color: #6b7280;">Checking application status...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Status -->
+            <div class="card">
+                <h2>👥 Agent Status</h2>
+                <div class="agent-status" id="agent-status">
+                    Loading agent status...
+                </div>
+            </div>
+
+            <!-- Active Tickets -->
+            <div class="card">
+                <h2>🎫 Active Tickets</h2>
+                <div class="tickets-grid" id="active-tickets">
+                    Loading tickets...
+                </div>
+            </div>
+
+            <!-- System Controls -->
+            <div class="card controls">
+                <h2>🔧 System Controls</h2>
+                
+                <div class="control-section">
+                    <h3>Project Management</h3>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="refreshStatus()">🔄 Refresh Status</button>
+                        <button class="btn btn-success" onclick="runSync()">🔗 Sync Agents</button>
+                        <button class="btn btn-warning" onclick="viewLogs()">📋 View PM Logs</button>
+                    </div>
+                    <div id="system-output" class="output" style="display: none;"></div>
+                </div>
+
+                <div class="control-section">
+                    <h3>Agent Commands</h3>
+                    <div class="agent-commands">
+                        <div class="agent-control">
+                            <h4>🎨 Design Agent</h4>
+                            <div class="button-group">
+                                <button class="btn btn-secondary" onclick="sendAgentCommand('design', 'start', 'E2-T1')">Start E2-T1</button>
+                                <button class="btn btn-success" onclick="sendAgentCommand('design', 'continue')">Continue</button>
+                            </div>
+                        </div>
+                        
+                        <div class="agent-control">
+                            <h4>⚙️ Backend Agent</h4>
+                            <div class="button-group">
+                                <button class="btn btn-secondary" onclick="sendAgentCommand('backend', 'start', 'E1-T2')">Start E1-T2</button>
+                                <button class="btn btn-secondary" onclick="sendAgentCommand('backend', 'start', 'E2-T3')">Start E2-T3</button>
+                                <button class="btn btn-success" onclick="sendAgentCommand('backend', 'continue')">Continue</button>
+                            </div>
+                        </div>
+                        
+                        <div class="agent-control">
+                            <h4>💻 Frontend Agent</h4>
+                            <div class="button-group">
+                                <button class="btn btn-secondary" onclick="sendAgentCommand('frontend', 'start', 'E2-T2')">Start E2-T2</button>
+                                <button class="btn btn-success" onclick="sendAgentCommand('frontend', 'continue')">Continue</button>
+                            </div>
+                        </div>
+                        
+                        <div class="agent-control">
+                            <h4>🧪 QA Agent</h4>
+                            <div class="button-group">
+                                <button class="btn btn-secondary" onclick="sendAgentCommand('qa', 'start', 'E1-T5')">Start E1-T5</button>
+                                <button class="btn btn-success" onclick="sendAgentCommand('qa', 'continue')">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Work -->
+            <div class="card completed-work">
+                <h2>✅ Completed Work</h2>
+                <div id="completed-tickets">
+                    Loading completed work...
+                </div>
+            </div>
+        </div>
+
+        <div class="refresh-info">
+            Last updated: <span id="last-updated">Never</span> | 
+            <a href="#" onclick="refreshStatus(); return false;">Refresh</a>
+        </div>
+    </div>
+
+    <script>
+        let projectData = {};
+
+        // Load project status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshStatus();
+            checkAppStatus();
+            // Auto-refresh every 30 seconds
+            setInterval(refreshStatus, 30000);
+            // Check app status every 60 seconds
+            setInterval(checkAppStatus, 60000);
+        });
+
+        async function refreshStatus() {
+            try {
+                showOutput('Loading project status...');
+                
+                // This would normally call the backend API
+                // For now, we'll simulate with the PM system data
+                await loadProjectData();
+                updateDisplay();
+                
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+                hideOutput();
+            } catch (error) {
+                showOutput('Error loading status: ' + error.message);
+            }
+        }
+
+        async function loadProjectData() {
+            try {
+                const response = await fetch('/api/status');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                projectData = await response.json();
+            } catch (error) {
+                console.error('Failed to load project data:', error);
+                // Fallback to mock data if API fails
+                projectData = {
+                    phase: "risk_validation",
+                    sprint: "Week 1 - API Validation", 
+                    risk_status: "red",
+                    epics: [
+                        {
+                            id: "E1",
+                            name: "Data Foundation & Validation",
+                            progress: 20,
+                            tickets_complete: 1,
+                            tickets_total: 5
+                        },
+                        {
+                            id: "E2",
+                            name: "Core Weather Dashboard", 
+                            progress: 20,
+                            tickets_complete: 1,
+                            tickets_total: 5
+                        }
+                    ],
+                    agents: {
+                        backend: { status: "available", current_ticket: null },
+                        frontend: { status: "available", current_ticket: null },
+                        qa: { status: "available", current_ticket: null },
+                        design: { status: "available", current_ticket: null }
+                    },
+                    active_tickets: [],
+                    completed_tickets: [],
+                    error: error.message
+                };
+            }
+        }
+
+        function updateDisplay() {
+            // Update epic progress
+            const e1Epic = projectData.epics.find(e => e.id === "E1");
+            const e2Epic = projectData.epics.find(e => e.id === "E2");
+            
+            document.getElementById('e1-progress').style.width = e1Epic.progress + '%';
+            document.getElementById('e1-status').textContent = `${e1Epic.tickets_complete}/${e1Epic.tickets_total} complete`;
+            
+            document.getElementById('e2-progress').style.width = e2Epic.progress + '%';
+            document.getElementById('e2-status').textContent = `${e2Epic.tickets_complete}/${e2Epic.tickets_total} complete`;
+            
+            document.getElementById('project-phase').innerHTML = `
+                <strong>Phase:</strong> ${projectData.phase} | 
+                <strong>Sprint:</strong> ${projectData.sprint} | 
+                <strong>Risk:</strong> <span style="color: #dc2626;">🔴 ${projectData.risk_status}</span>
+            `;
+
+            // Update agent status
+            const agentStatusEl = document.getElementById('agent-status');
+            agentStatusEl.innerHTML = '';
+            
+            Object.entries(projectData.agents).forEach(([name, agent]) => {
+                const agentEl = document.createElement('div');
+                agentEl.className = `agent ${agent.status}`;
+                agentEl.innerHTML = `
+                    <h4>${getAgentIcon(name)} ${name.charAt(0).toUpperCase() + name.slice(1)}</h4>
+                    <div>Status: ${agent.status}</div>
+                    ${agent.current_ticket ? `<div class="agent-ticket">${agent.current_ticket}</div>` : ''}
+                `;
+                agentStatusEl.appendChild(agentEl);
+            });
+
+            // Update active tickets
+            const ticketsEl = document.getElementById('active-tickets');
+            ticketsEl.innerHTML = '';
+            
+            projectData.active_tickets.forEach(ticket => {
+                const ticketEl = document.createElement('div');
+                ticketEl.className = `ticket ${ticket.status}`;
+                ticketEl.innerHTML = `
+                    <h4>${ticket.id}: ${ticket.title}</h4>
+                    <div class="ticket-meta">
+                        Agent: ${getAgentIcon(ticket.agent)} ${ticket.agent} | 
+                        Status: ${ticket.status}
+                    </div>
+                `;
+                ticketsEl.appendChild(ticketEl);
+            });
+
+            // Update completed work
+            const completedEl = document.getElementById('completed-tickets');
+            completedEl.innerHTML = '';
+            
+            projectData.completed_tickets.forEach(ticket => {
+                const completedItem = document.createElement('div');
+                completedItem.className = 'completed-item';
+                completedItem.innerHTML = `
+                    <h4>✅ ${ticket.id}: ${ticket.title}</h4>
+                    <p>Completed by ${ticket.agent} on ${new Date(ticket.completed).toLocaleDateString()}</p>
+                    <p>${ticket.description}</p>
+                `;
+                completedEl.appendChild(completedItem);
+            });
+        }
+
+        function getAgentIcon(agent) {
+            const icons = {
+                backend: '⚙️',
+                frontend: '💻', 
+                qa: '🧪',
+                design: '🎨'
+            };
+            return icons[agent] || '👤';
+        }
+
+        async function runSync() {
+            showOutput('Running agent sync...\n');
+            try {
+                const response = await fetch('/api/sync', { method: 'POST' });
+                const result = await response.json();
+                
+                if (result.success) {
+                    appendOutput(result.output);
+                    if (result.error_output) {
+                        appendOutput('\nWarnings:\n' + result.error_output);
+                    }
+                    appendOutput('\n✅ Sync completed successfully.');
+                    // Refresh status after sync
+                    setTimeout(refreshStatus, 1000);
+                } else {
+                    appendOutput('❌ Sync failed: ' + result.error);
+                }
+            } catch (error) {
+                appendOutput('❌ Sync error: ' + error.message);
+            }
+        }
+
+        async function sendAgentCommand(agent, command, ticket = null) {
+            const commandText = ticket ? `${command} ${ticket}` : command;
+            showOutput(`Sending command to ${agent} agent: ${commandText}\n`);
+            
+            try {
+                const response = await fetch(`/api/agent/${agent}/command`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command, ticket })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    appendOutput(`📝 Command executed: ${result.command}\n`);
+                    appendOutput(result.output);
+                    if (result.error_output) {
+                        appendOutput('\nWarnings:\n' + result.error_output);
+                    }
+                    appendOutput('\n✅ Command completed successfully.');
+                    // Refresh status after command
+                    setTimeout(refreshStatus, 1000);
+                } else {
+                    appendOutput('❌ Command failed: ' + result.error);
+                }
+            } catch (error) {
+                appendOutput('❌ Command error: ' + error.message);
+            }
+        }
+
+        async function viewLogs() {
+            showOutput('Loading PM system logs...\n');
+            try {
+                const response = await fetch('/api/logs');
+                const result = await response.json();
+                
+                if (result.logs && result.logs.length > 0) {
+                    appendOutput('📋 Recent PM Activity:\n');
+                    result.logs.forEach(log => {
+                        const timestamp = new Date(log.timestamp).toLocaleString();
+                        appendOutput(`${timestamp} - ${log.message}\n`);
+                    });
+                    appendOutput('\n✅ Logs loaded.');
+                } else {
+                    appendOutput('📋 No recent activity found.');
+                }
+            } catch (error) {
+                appendOutput('❌ Failed to load logs: ' + error.message);
+            }
+        }
+
+        function showOutput(text) {
+            const output = document.getElementById('system-output');
+            output.style.display = 'block';
+            output.textContent = text;
+        }
+
+        function appendOutput(text) {
+            const output = document.getElementById('system-output');
+            output.textContent += text;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function hideOutput() {
+            setTimeout(() => {
+                document.getElementById('system-output').style.display = 'none';
+            }, 2000);
+        }
+
+        async function checkAppStatus() {
+            const statusEl = document.getElementById('app-status');
+            
+            try {
+                // Check if weather application is running
+                const healthResponse = await fetch('http://localhost:3001/api/health');
+                
+                if (healthResponse.ok) {
+                    const health = await healthResponse.json();
+                    statusEl.innerHTML = `
+                        <span style="color: #10b981;">✅ Weather Application Running</span><br>
+                        <small style="color: #6b7280;">Environment: ${health.environment || 'unknown'}</small><br>
+                        <small style="color: #6b7280;">Last check: ${new Date().toLocaleTimeString()}</small>
+                    `;
+                } else {
+                    throw new Error('Health check failed');
+                }
+            } catch (error) {
+                statusEl.innerHTML = `
+                    <span style="color: #ef4444;">❌ Weather Application Not Running</span><br>
+                    <small style="color: #6b7280;">Start with: npm run dev</small><br>
+                    <small style="color: #6b7280;">Last check: ${new Date().toLocaleTimeString()}</small>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
