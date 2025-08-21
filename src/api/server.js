@@ -3,6 +3,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const weatherRoutes = require('./weather');
@@ -14,7 +15,10 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, '../../dist')));
+
+// API Routes
 app.use('/api/weather', weatherRoutes);
 
 // Health check endpoint
@@ -37,11 +41,16 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
+// Serve React app for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../dist/index.html'));
+});
+
+// 404 handler for API routes only
+app.use('/api/*', (req, res) => {
   res.status(404).json({
     success: false,
-    error: 'Endpoint not found',
+    error: 'API endpoint not found',
     timestamp: new Date().toISOString()
   });
 });

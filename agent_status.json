@@ -46,15 +46,12 @@
       "title": "Elevation adjustment calculation",
       "epic": "E1",
       "assigned_to": "backend",
-      "status": "in_progress",
+      "status": "todo",
       "dependencies": [
         "E1-T3"
       ],
-      "files": [
-        "src/services/elevationAdjustment.js"
-      ],
-      "feature_docs": "docs/features.md#elevation-adjustment-calculation",
-      "started": "2025-08-21T05:00:00.000000"
+      "files": [],
+      "feature_docs": "docs/features.md#elevation-adjustment-calculation"
     },
     {
       "id": "E1-T5",
