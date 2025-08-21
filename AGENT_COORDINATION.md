@@ -21,6 +21,34 @@ This project uses **parallel agent development** with shared state management. A
 3. **START TICKET**: `python3 pm.py start <ticket-id> <your-agent-name>`
 4. **UPDATE DOCS**: Always update `docs/features.md` with progress
 
+### 📋 After Completing Documentation Changes:
+If you've updated any documentation files in your agent directory, **sync changes back to main**:
+
+**Critical Documentation Files to Sync Back**:
+- `docs/architecture.md` - Architecture decisions and changes
+- `docs/data-schema.md` - Database and API schema updates  
+- `docs/features.md` - Feature implementation tracking
+- `docs/implementation_plan.md` - Development plans and roadmaps
+- `docs/prd.md` - Product requirements and user story updates
+- `docs/risks.md` - Risk assessments and mitigation updates
+
+**Reverse Sync Process**:
+```bash
+# From your agent directory, copy docs back to main
+cp docs/architecture.md ../emerald-hills-weather/docs/
+cp docs/data-schema.md ../emerald-hills-weather/docs/
+cp docs/features.md ../emerald-hills-weather/docs/
+cp docs/implementation_plan.md ../emerald-hills-weather/docs/
+cp docs/prd.md ../emerald-hills-weather/docs/
+cp docs/risks.md ../emerald-hills-weather/docs/
+
+# Then run sync to distribute to other agents
+cd ../
+./sync_agents.sh
+```
+
+**⚠️ Important**: Always run the full sync after updating documentation to ensure all agents have the latest coordination information.
+
 ---
 
 ## 👥 AGENT ROLES & CURRENT ASSIGNMENTS
@@ -29,7 +57,7 @@ This project uses **parallel agent development** with shared state management. A
 **Role**: UI/UX design, wireframes, user experience
 **Directory**: `emerald-hills-weather-design/`
 **Current Tickets**:
-- **E2-T1**: Dashboard UI design (ready to start)
+- **E2-T1**: Dashboard UI design (in progress)
 
 **Responsibilities**:
 - Create UI mockups and wireframes for weather dashboard
@@ -47,7 +75,7 @@ This project uses **parallel agent development** with shared state management. A
 **Role**: React components, client-side logic, UI implementation
 **Directory**: `emerald-hills-weather-frontend/`
 **Current Tickets**:
-- **E2-T2**: Current conditions display (ready to start)
+- **E2-T2**: Current conditions display (in progress)
 - **E2-T4**: Frontend-backend integration (depends on E2-T3)
 
 **Responsibilities**:
@@ -67,10 +95,10 @@ This project uses **parallel agent development** with shared state management. A
 **Role**: APIs, data processing, server logic, correlation analysis  
 **Directory**: `emerald-hills-weather-backend/`
 **Current Tickets**:
-- **E1-T2**: Data collection system (ready to start)
-- **E1-T3**: Basic correlation analysis (depends on E1-T2)
-- **E1-T4**: Elevation adjustment calculation (depends on E1-T3)
-- **E2-T3**: Forecast API endpoints (can start in parallel)
+- **E1-T2**: Data collection system (completed, integrated)
+- **E1-T3**: Basic correlation analysis (completed, integrated)
+- **E1-T4**: Elevation adjustment calculation (in progress)
+- **E2-T3**: Forecast API endpoints (ready to start)
 
 **Responsibilities**:
 - Build automated weather data collection system
@@ -89,7 +117,7 @@ This project uses **parallel agent development** with shared state management. A
 **Role**: Testing, validation, quality assurance
 **Directory**: `emerald-hills-weather-qa/`  
 **Current Tickets**:
-- **E1-T5**: API validation testing (ready to start)
+- **E1-T5**: API validation testing (in progress)
 - **E2-T5**: Basic dashboard testing (depends on E2-T2, E2-T3)
 
 **Responsibilities**:
@@ -101,6 +129,49 @@ This project uses **parallel agent development** with shared state management. A
 **Key Files**:
 - `tests/` - Test suites organized by component
 - `docs/testing/` - Test plans and results
+
+---
+
+### 🏗️ ARCHITECT AGENT
+**Role**: Architectural oversight, design consistency, integration problem solving
+**Directory**: `emerald-hills-weather-architect/`
+**Current Tickets**:
+- **ARC-T1**: Architecture compliance review (ready to start)
+- **ARC-T2**: Frontend-backend integration architecture (depends on E2-T1)
+
+**Responsibilities**:
+- Monitor code integration for architectural compliance
+- Solve architectural problems that block other agents
+- Maintain design consistency across parallel development
+- Review staging integrations for architectural integrity
+- Update architecture documentation as system evolves
+
+**Key Files**:
+- `docs/architecture.md` - Core architectural documentation
+- `src/` - Review all code for architectural compliance
+- Integration patterns and standards
+
+---
+
+### 🚀 DEPLOYMENT ENGINEER AGENT
+**Role**: Integration orchestration, deployment pipeline, delivery management
+**Directory**: `emerald-hills-weather-deployment/`
+**Current Tickets**:
+- **DEP-T1**: Staging integration and deployment pipeline (ready to start)
+- **DEP-T2**: GitHub repository setup and CI/CD (priority)
+
+**Responsibilities**:
+- Monitor project progress and coordinate agent work completion
+- Orchestrate integration from agent directories to staging environment
+- Manage deployment pipeline from staging to production
+- Ensure commits and deployments happen at proper milestones
+- Implement CI/CD automation and quality gates
+
+**Key Files**:
+- `scripts/` - Integration and deployment automation
+- `.github/workflows/` - CI/CD pipeline configuration
+- `deployment/` - Environment configurations
+- Release management and coordination
 
 ---
 
