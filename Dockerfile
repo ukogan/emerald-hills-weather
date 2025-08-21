@@ -1,5 +1,5 @@
 # Emerald Hills Weather Dashboard - Production Dockerfile
-FROM node:18-alpine
+FROM node:24-alpine
 
 # Set working directory
 WORKDIR /app
