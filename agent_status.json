@@ -103,13 +103,14 @@
       "title": "Forecast API endpoints",
       "epic": "E2",
       "assigned_to": "backend",
-      "status": "todo",
+      "status": "in_progress",
       "description": "",
       "created": "2025-08-20T20:00:57.804974",
       "files": [],
       "feature_docs": "docs/features.md#forecast-api-endpoints",
       "blocked_by": [],
-      "dependencies": []
+      "dependencies": [],
+      "started": "2025-08-20T22:21:42.851220"
     },
     {
       "id": "E2-T4",
@@ -225,9 +226,9 @@
   ],
   "agents": {
     "backend": {
-      "current_ticket": "E1-T4",
+      "current_ticket": "E2-T3",
       "status": "active",
-      "last_update": "2025-08-21T05:00:00.000000"
+      "last_update": "2025-08-20T22:21:42.851226"
     },
     "design": {
       "current_ticket": "E2-T1",
