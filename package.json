@@ -33,7 +33,7 @@
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "css-loader": "^6.8.1",
-    "style-loader": "^3.3.3"
+    "style-loader": "^4.0.0"
   },
   "keywords": ["weather", "forecast", "microclimate", "sf-peninsula"],
   "author": "PM + Claude Code Agents",
